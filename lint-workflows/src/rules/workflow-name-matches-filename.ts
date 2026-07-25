@@ -7,7 +7,7 @@ import { findPair, topLevelMap, type WorkflowFile } from "../workflow-document.j
  * Actions UI や gh run list の表示名から対象ファイルを一意に辿れるようにするため、
  * トップレベル name はファイル名 (拡張子なし) と一致させる。
  */
-export function workflowNameMatchesFilename(wf: WorkflowFile): Finding[] {
+export const workflowNameMatchesFilename = (wf: WorkflowFile): Finding[] => {
   const base = wf.file.replace(/^.*\//, "").replace(/\.ya?ml$/, "");
 
   const top = topLevelMap(wf);
@@ -35,4 +35,4 @@ export function workflowNameMatchesFilename(wf: WorkflowFile): Finding[] {
       message: `name '${name ?? "(スカラー以外)"}' がファイル名 '${base}' と一致しません`,
     },
   ];
-}
+};

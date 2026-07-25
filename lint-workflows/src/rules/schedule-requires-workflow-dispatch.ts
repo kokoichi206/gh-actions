@@ -5,7 +5,7 @@ import { findPair, triggerMap, type WorkflowFile } from "../workflow-document.js
  * cron 専用 workflow は手動実行できず、動作確認が「次の cron を待つ」になるため、
  * schedule には workflow_dispatch の併記を必須とする。
  */
-export function scheduleRequiresWorkflowDispatch(wf: WorkflowFile): Finding[] {
+export const scheduleRequiresWorkflowDispatch = (wf: WorkflowFile): Finding[] => {
   const on = triggerMap(wf);
   if (!on) return [];
 
@@ -20,4 +20,4 @@ export function scheduleRequiresWorkflowDispatch(wf: WorkflowFile): Finding[] {
       message: "schedule トリガーには workflow_dispatch を併記してください (手動実行での動作確認を可能にするため)",
     },
   ];
-}
+};

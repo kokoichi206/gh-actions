@@ -20,7 +20,7 @@ zizmor (security 専門) が扱わない規約を検査し、違反を PR の in
 | schedule-requires-workflow-dispatch | `schedule:` トリガーには `workflow_dispatch:` を併記すること。cron を待たずに手動で動作確認できるようにする |
 | pull-request-requires-concurrency | `pull_request` トリガーの workflow は `concurrency` + `cancel-in-progress: true` を持つこと。PR への連続 push で旧 run が回り続けるのを防ぐ。push 起点のデプロイ系 (cancel でなく queue が正しい) は対象外 |
 
-使い方:
+使い方 (必要な権限は `contents: read` のみ。write 権限・secrets は不要):
 
 ```yaml
 steps:

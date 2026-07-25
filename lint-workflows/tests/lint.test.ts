@@ -5,21 +5,17 @@ import type { Finding, LintOptions } from "../src/types.js";
 
 const DEFAULT_OPTIONS: LintOptions = { maxTimeoutMinutes: 60 };
 
-function lintLines(
+const lintLines = (
   file: string,
   lines: string[],
   options: LintOptions = DEFAULT_OPTIONS,
-): Finding[] {
-  return lintWorkflowSource(file, lines.join("\n") + "\n", options);
-}
+): Finding[] => lintWorkflowSource(file, lines.join("\n") + "\n", options);
 
-function rulesOf(findings: Finding[]): string[] {
-  return findings.map((finding) => finding.rule);
-}
+const rulesOf = (findings: Finding[]): string[] =>
+  findings.map((finding) => finding.rule);
 
-function byRule(findings: Finding[], rule: string): Finding[] {
-  return findings.filter((finding) => finding.rule === rule);
-}
+const byRule = (findings: Finding[], rule: string): Finding[] =>
+  findings.filter((finding) => finding.rule === rule);
 
 describe("違反のない workflow", () => {
   it("全ルールを通過する", () => {

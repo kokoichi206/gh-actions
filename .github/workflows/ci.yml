@@ -86,6 +86,8 @@ jobs:
       - name: Verify dist is up to date
         run: git diff --exit-code -- dist
 
-      # PR の変更を含む build 直後の dist で、このリポジトリ自身の workflow を検査する。
-      - name: Dogfood lint against this repository
-        run: node dist/index.cjs
+      # PR の変更を含む dist を、実際の配布形態 (action.yml 経由の local action) で
+      # このリポジトリ自身の workflow に対して実行する。
+      # action.yml の構文・node24 runtime・main パスまで含めて検証される。
+      - name: Dogfood packaged action against this repository
+        uses: ./lint-workflows

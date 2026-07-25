@@ -8,11 +8,11 @@ import { workflowNameMatchesFilename } from "./rules/workflow-name-matches-filen
 import type { Finding, LintOptions } from "./types.js";
 import { parseWorkflow } from "./workflow-document.js";
 
-export function lintWorkflowSource(
+export const lintWorkflowSource = (
   file: string,
   source: string,
   options: LintOptions,
-): Finding[] {
+): Finding[] => {
   const wf = parseWorkflow(file, source);
 
   if (wf.doc.errors.length > 0) {
@@ -33,4 +33,4 @@ export function lintWorkflowSource(
     ...scheduleRequiresWorkflowDispatch(wf),
     ...pullRequestRequiresConcurrency(wf),
   ];
-}
+};

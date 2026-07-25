@@ -7,7 +7,7 @@ import { jobEntries, type WorkflowFile } from "../workflow-document.js";
  * reusable workflow を呼ぶ job (`uses:`) は仕様上 timeout-minutes を設定できないため
  * 対象外 (呼び出し先 workflow の job で設定する)。
  */
-export function requireJobTimeout(wf: WorkflowFile): Finding[] {
+export const requireJobTimeout = (wf: WorkflowFile): Finding[] => {
   const findings: Finding[] = [];
   for (const job of jobEntries(wf)) {
     if (job.callsReusableWorkflow) continue;
@@ -21,4 +21,4 @@ export function requireJobTimeout(wf: WorkflowFile): Finding[] {
     });
   }
   return findings;
-}
+};

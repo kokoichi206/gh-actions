@@ -7,12 +7,14 @@ import { formatErrorCommand } from "./workflow-commands.js";
 
 const DEFAULT_MAX_TIMEOUT_MINUTES = 60;
 
-function fail(message: string): never {
+// 到達不能解析 (TS2454 回避) には変数側の型注釈が必須。
+// arrow の返り値注釈だけでは never 呼び出しとして CFA に効かない。
+const fail: (message: string) => never = (message) => {
   console.log(`::error::${message}`);
   process.exit(1);
-}
+};
 
-function resolveMaxTimeoutMinutes(): number {
+const resolveMaxTimeoutMinutes = (): number => {
   const raw = (process.env["INPUT_MAX-TIMEOUT-MINUTES"] ?? "").trim();
   if (raw === "") return DEFAULT_MAX_TIMEOUT_MINUTES;
 
@@ -21,7 +23,7 @@ function resolveMaxTimeoutMinutes(): number {
     fail(`input max-timeout-minutes は正の整数で指定してください (指定値: '${raw}')`);
   }
   return parsed;
-}
+};
 
 const root = process.env["GITHUB_WORKSPACE"] ?? process.cwd();
 const workflowsDir = join(root, ".github", "workflows");

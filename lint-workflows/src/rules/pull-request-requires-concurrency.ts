@@ -9,7 +9,7 @@ import { findPair, topLevelMap, triggerNames, type WorkflowFile } from "../workf
  * concurrency を必須とする。値が式 (`${{ ... }}`) の場合は動的制御とみなし許容する。
  * push 起点のデプロイ系 workflow は cancel でなく queue が正しいため対象外。
  */
-export function pullRequestRequiresConcurrency(wf: WorkflowFile): Finding[] {
+export const pullRequestRequiresConcurrency = (wf: WorkflowFile): Finding[] => {
   if (!triggerNames(wf).includes("pull_request")) return [];
 
   const top = topLevelMap(wf);
@@ -45,4 +45,4 @@ export function pullRequestRequiresConcurrency(wf: WorkflowFile): Finding[] {
       message: "pull_request トリガーの workflow の concurrency には cancel-in-progress: true が必要です",
     },
   ];
-}
+};

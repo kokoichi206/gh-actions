@@ -10,7 +10,7 @@ type RangedNode = { range?: [number, number, number] | null };
  * 判定は「前の step の最終コンテンツ行と次の step の開始行の間に空行があるか」。
  * step 間のコメント行は空行の代わりにはならない (bash 版と同じ扱い)。
  */
-export function requireBlankLineBetweenSteps(wf: WorkflowFile): Finding[] {
+export const requireBlankLineBetweenSteps = (wf: WorkflowFile): Finding[] => {
   const findings: Finding[] = [];
   for (const job of jobEntries(wf)) {
     const stepsNode = job.map.get("steps");
@@ -36,4 +36,4 @@ export function requireBlankLineBetweenSteps(wf: WorkflowFile): Finding[] {
     }
   }
   return findings;
-}
+};

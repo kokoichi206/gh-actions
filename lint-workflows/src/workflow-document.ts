@@ -27,7 +27,7 @@ export type JobEntry = {
 
 type RangedNode = { range?: [number, number, number] | null };
 
-export function parseWorkflow(file: string, source: string): WorkflowFile {
+export const parseWorkflow = (file: string, source: string): WorkflowFile => {
   const lineCounter = new LineCounter();
   const doc = parseDocument(source, { lineCounter });
 
@@ -47,17 +47,15 @@ export function parseWorkflow(file: string, source: string): WorkflowFile {
     lineOfNode,
     lineOfOffset,
   };
-}
+};
 
-export function topLevelMap(wf: WorkflowFile): YAMLMap | null {
-  return isMap(wf.doc.contents) ? wf.doc.contents : null;
-}
+export const topLevelMap = (wf: WorkflowFile): YAMLMap | null =>
+  isMap(wf.doc.contents) ? wf.doc.contents : null;
 
-export function findPair(map: YAMLMap, key: string): Pair | undefined {
-  return map.items.find((pair) => isScalar(pair.key) && pair.key.value === key);
-}
+export const findPair = (map: YAMLMap, key: string): Pair | undefined =>
+  map.items.find((pair) => isScalar(pair.key) && pair.key.value === key);
 
-export function jobEntries(wf: WorkflowFile): JobEntry[] {
+export const jobEntries = (wf: WorkflowFile): JobEntry[] => {
   const top = topLevelMap(wf);
   if (!top) return [];
 
@@ -75,10 +73,10 @@ export function jobEntries(wf: WorkflowFile): JobEntry[] {
     });
   }
   return entries;
-}
+};
 
 /** `on:` の scalar / sequence / mapping 全形式からトリガー名を取り出す。 */
-export function triggerNames(wf: WorkflowFile): string[] {
+export const triggerNames = (wf: WorkflowFile): string[] => {
   const top = topLevelMap(wf);
   if (!top) return [];
 
@@ -93,13 +91,13 @@ export function triggerNames(wf: WorkflowFile): string[] {
       .map((pair) => String((pair.key as { value: unknown }).value));
   }
   return [];
-}
+};
 
 /** `on:` が mapping 形式のときのみ、その mapping を返す。 */
-export function triggerMap(wf: WorkflowFile): YAMLMap | null {
+export const triggerMap = (wf: WorkflowFile): YAMLMap | null => {
   const top = topLevelMap(wf);
   if (!top) return null;
 
   const onNode = findPair(top, "on")?.value;
   return isMap(onNode) ? onNode : null;
-}
+};

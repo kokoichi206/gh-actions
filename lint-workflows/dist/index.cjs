@@ -7365,7 +7365,7 @@ var import_yaml2 = __toESM(require_dist(), 1);
 
 // src/workflow-document.ts
 var import_yaml = __toESM(require_dist(), 1);
-function parseWorkflow(file, source) {
+var parseWorkflow = (file, source) => {
   const lineCounter = new import_yaml.LineCounter();
   const doc = (0, import_yaml.parseDocument)(source, { lineCounter });
   const lineOfOffset = (offset) => lineCounter.linePos(offset).line;
@@ -7382,14 +7382,10 @@ function parseWorkflow(file, source) {
     lineOfNode,
     lineOfOffset
   };
-}
-function topLevelMap(wf) {
-  return (0, import_yaml.isMap)(wf.doc.contents) ? wf.doc.contents : null;
-}
-function findPair(map, key) {
-  return map.items.find((pair) => (0, import_yaml.isScalar)(pair.key) && pair.key.value === key);
-}
-function jobEntries(wf) {
+};
+var topLevelMap = (wf) => (0, import_yaml.isMap)(wf.doc.contents) ? wf.doc.contents : null;
+var findPair = (map, key) => map.items.find((pair) => (0, import_yaml.isScalar)(pair.key) && pair.key.value === key);
+var jobEntries = (wf) => {
   const top = topLevelMap(wf);
   if (!top) return [];
   const jobsNode = findPair(top, "jobs")?.value;
@@ -7405,8 +7401,8 @@ function jobEntries(wf) {
     });
   }
   return entries;
-}
-function triggerNames(wf) {
+};
+var triggerNames = (wf) => {
   const top = topLevelMap(wf);
   if (!top) return [];
   const onNode = findPair(top, "on")?.value;
@@ -7418,16 +7414,16 @@ function triggerNames(wf) {
     return onNode.items.filter((pair) => (0, import_yaml.isScalar)(pair.key)).map((pair) => String(pair.key.value));
   }
   return [];
-}
-function triggerMap(wf) {
+};
+var triggerMap = (wf) => {
   const top = topLevelMap(wf);
   if (!top) return null;
   const onNode = findPair(top, "on")?.value;
   return (0, import_yaml.isMap)(onNode) ? onNode : null;
-}
+};
 
 // src/rules/max-job-timeout.ts
-function maxJobTimeout(wf, options2) {
+var maxJobTimeout = (wf, options2) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
     const timeoutNode = job.map.get("timeout-minutes", true);
@@ -7441,11 +7437,11 @@ function maxJobTimeout(wf, options2) {
     });
   }
   return findings2;
-}
+};
 
 // src/rules/pull-request-requires-concurrency.ts
 var import_yaml3 = __toESM(require_dist(), 1);
-function pullRequestRequiresConcurrency(wf) {
+var pullRequestRequiresConcurrency = (wf) => {
   if (!triggerNames(wf).includes("pull_request")) return [];
   const top = topLevelMap(wf);
   if (!top) return [];
@@ -7475,11 +7471,11 @@ function pullRequestRequiresConcurrency(wf) {
       message: "pull_request \u30C8\u30EA\u30AC\u30FC\u306E workflow \u306E concurrency \u306B\u306F cancel-in-progress: true \u304C\u5FC5\u8981\u3067\u3059"
     }
   ];
-}
+};
 
 // src/rules/require-blank-line-between-steps.ts
 var import_yaml4 = __toESM(require_dist(), 1);
-function requireBlankLineBetweenSteps(wf) {
+var requireBlankLineBetweenSteps = (wf) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
     const stepsNode = job.map.get("steps");
@@ -7501,10 +7497,10 @@ function requireBlankLineBetweenSteps(wf) {
     }
   }
   return findings2;
-}
+};
 
 // src/rules/require-job-timeout.ts
-function requireJobTimeout(wf) {
+var requireJobTimeout = (wf) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
     if (job.callsReusableWorkflow) continue;
@@ -7517,11 +7513,11 @@ function requireJobTimeout(wf) {
     });
   }
   return findings2;
-}
+};
 
 // src/rules/require-step-name.ts
 var import_yaml5 = __toESM(require_dist(), 1);
-function requireStepName(wf) {
+var requireStepName = (wf) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
     const stepsNode = job.map.get("steps");
@@ -7539,10 +7535,10 @@ function requireStepName(wf) {
     }
   }
   return findings2;
-}
+};
 
 // src/rules/schedule-requires-workflow-dispatch.ts
-function scheduleRequiresWorkflowDispatch(wf) {
+var scheduleRequiresWorkflowDispatch = (wf) => {
   const on = triggerMap(wf);
   if (!on) return [];
   const schedulePair = findPair(on, "schedule");
@@ -7555,11 +7551,11 @@ function scheduleRequiresWorkflowDispatch(wf) {
       message: "schedule \u30C8\u30EA\u30AC\u30FC\u306B\u306F workflow_dispatch \u3092\u4F75\u8A18\u3057\u3066\u304F\u3060\u3055\u3044 (\u624B\u52D5\u5B9F\u884C\u3067\u306E\u52D5\u4F5C\u78BA\u8A8D\u3092\u53EF\u80FD\u306B\u3059\u308B\u305F\u3081)"
     }
   ];
-}
+};
 
 // src/rules/workflow-name-matches-filename.ts
 var import_yaml6 = __toESM(require_dist(), 1);
-function workflowNameMatchesFilename(wf) {
+var workflowNameMatchesFilename = (wf) => {
   const base = wf.file.replace(/^.*\//, "").replace(/\.ya?ml$/, "");
   const top = topLevelMap(wf);
   const namePair = top ? findPair(top, "name") : void 0;
@@ -7584,10 +7580,10 @@ function workflowNameMatchesFilename(wf) {
       message: `name '${name ?? "(\u30B9\u30AB\u30E9\u30FC\u4EE5\u5916)"}' \u304C\u30D5\u30A1\u30A4\u30EB\u540D '${base}' \u3068\u4E00\u81F4\u3057\u307E\u305B\u3093`
     }
   ];
-}
+};
 
 // src/lint.ts
-function lintWorkflowSource(file, source, options2) {
+var lintWorkflowSource = (file, source, options2) => {
   const wf = parseWorkflow(file, source);
   if (wf.doc.errors.length > 0) {
     return wf.doc.errors.map((error) => ({
@@ -7606,26 +7602,20 @@ function lintWorkflowSource(file, source, options2) {
     ...scheduleRequiresWorkflowDispatch(wf),
     ...pullRequestRequiresConcurrency(wf)
   ];
-}
+};
 
 // src/workflow-commands.ts
-function escapeMessage(value) {
-  return value.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A");
-}
-function escapeProperty(value) {
-  return escapeMessage(value).replaceAll(":", "%3A").replaceAll(",", "%2C");
-}
-function formatErrorCommand(finding) {
-  return `::error file=${escapeProperty(finding.file)},line=${finding.line}::[${finding.rule}] ${escapeMessage(finding.message)}`;
-}
+var escapeMessage = (value) => value.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A");
+var escapeProperty = (value) => escapeMessage(value).replaceAll(":", "%3A").replaceAll(",", "%2C");
+var formatErrorCommand = (finding) => `::error file=${escapeProperty(finding.file)},line=${finding.line}::[${finding.rule}] ${escapeMessage(finding.message)}`;
 
 // src/main.ts
 var DEFAULT_MAX_TIMEOUT_MINUTES = 60;
-function fail(message) {
+var fail = (message) => {
   console.log(`::error::${message}`);
   process.exit(1);
-}
-function resolveMaxTimeoutMinutes() {
+};
+var resolveMaxTimeoutMinutes = () => {
   const raw = (process.env["INPUT_MAX-TIMEOUT-MINUTES"] ?? "").trim();
   if (raw === "") return DEFAULT_MAX_TIMEOUT_MINUTES;
   const parsed = Number(raw);
@@ -7633,7 +7623,7 @@ function resolveMaxTimeoutMinutes() {
     fail(`input max-timeout-minutes \u306F\u6B63\u306E\u6574\u6570\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044 (\u6307\u5B9A\u5024: '${raw}')`);
   }
   return parsed;
-}
+};
 var root = process.env["GITHUB_WORKSPACE"] ?? process.cwd();
 var workflowsDir = (0, import_node_path.join)(root, ".github", "workflows");
 var filenames;

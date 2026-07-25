@@ -7,7 +7,7 @@ import { jobEntries, type WorkflowFile } from "../workflow-document.js";
  * timeout-minutes はキーの存在だけでは課金の上限にならないため、値にも上限を課す。
  * 式 (`${{ ... }}`) など数値以外の値は評価できないので対象外。
  */
-export function maxJobTimeout(wf: WorkflowFile, options: LintOptions): Finding[] {
+export const maxJobTimeout = (wf: WorkflowFile, options: LintOptions): Finding[] => {
   const findings: Finding[] = [];
   for (const job of jobEntries(wf)) {
     const timeoutNode = job.map.get("timeout-minutes", true);
@@ -22,4 +22,4 @@ export function maxJobTimeout(wf: WorkflowFile, options: LintOptions): Finding[]
     });
   }
   return findings;
-}
+};
