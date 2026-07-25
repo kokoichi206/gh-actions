@@ -1,7 +1,14 @@
 import { isMap } from "yaml";
 
 import type { Finding } from "../types.js";
-import { findPair, topLevelMap, triggerNames, type WorkflowFile } from "../workflow-document.js";
+import {
+  deref,
+  findPair,
+  scalarValueOf,
+  topLevelMap,
+  triggerNames,
+  type WorkflowFile,
+} from "../workflow-document.js";
 
 /**
  * PR へ push するたびに旧 run が回り続けると runner 課金が無駄になるため、
@@ -29,9 +36,9 @@ export const pullRequestRequiresConcurrency = (wf: WorkflowFile): Finding[] => {
     ];
   }
 
-  const concurrencyNode = concurrencyPair.value;
+  const concurrencyNode = deref(wf, concurrencyPair.value);
   if (isMap(concurrencyNode)) {
-    const cancelInProgress = concurrencyNode.get("cancel-in-progress");
+    const cancelInProgress = scalarValueOf(wf, concurrencyNode.get("cancel-in-progress", true));
     const isExpression =
       typeof cancelInProgress === "string" && cancelInProgress.includes("${{");
     if (cancelInProgress === true || isExpression) return [];

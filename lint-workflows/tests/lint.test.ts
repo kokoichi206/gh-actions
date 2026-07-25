@@ -337,6 +337,29 @@ describe("pull-request-requires-concurrency", () => {
   });
 });
 
+describe("YAML anchor / alias", () => {
+  it("alias 経由の steps / timeout-minutes も検査を素通ししない", () => {
+    const findings = lintLines("wf.yml", [
+      "name: wf",
+      "jobs:",
+      "  a:",
+      "    runs-on: ubuntu-latest",
+      "    timeout-minutes: &to 90",
+      "    steps: &shared",
+      "      - name: One",
+      "        run: echo 1",
+      "",
+      "      - run: echo unnamed",
+      "  b:",
+      "    runs-on: ubuntu-latest",
+      "    timeout-minutes: *to",
+      "    steps: *shared",
+    ]);
+    expect(byRule(findings, "require-step-name")).toHaveLength(2);
+    expect(byRule(findings, "max-job-timeout")).toHaveLength(2);
+  });
+});
+
 describe("YAML として不正なファイル", () => {
   it("yaml-parse-error として報告する", () => {
     const findings = lintLines("wf.yml", ["jobs: [", "  broken"]);

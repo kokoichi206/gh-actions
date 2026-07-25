@@ -40,7 +40,7 @@ var require_identity = __commonJS({
     var SCALAR = /* @__PURE__ */ Symbol.for("yaml.scalar");
     var SEQ = /* @__PURE__ */ Symbol.for("yaml.seq");
     var NODE_TYPE = /* @__PURE__ */ Symbol.for("yaml.node.type");
-    var isAlias = (node) => !!node && typeof node === "object" && node[NODE_TYPE] === ALIAS;
+    var isAlias2 = (node) => !!node && typeof node === "object" && node[NODE_TYPE] === ALIAS;
     var isDocument = (node) => !!node && typeof node === "object" && node[NODE_TYPE] === DOC;
     var isMap4 = (node) => !!node && typeof node === "object" && node[NODE_TYPE] === MAP;
     var isPair = (node) => !!node && typeof node === "object" && node[NODE_TYPE] === PAIR;
@@ -75,7 +75,7 @@ var require_identity = __commonJS({
     exports2.SCALAR = SCALAR;
     exports2.SEQ = SEQ;
     exports2.hasAnchor = hasAnchor;
-    exports2.isAlias = isAlias;
+    exports2.isAlias = isAlias2;
     exports2.isCollection = isCollection;
     exports2.isDocument = isDocument;
     exports2.isMap = isMap4;
@@ -7383,6 +7383,11 @@ var parseWorkflow = (file, source) => {
     lineOfOffset
   };
 };
+var deref = (wf, node) => (0, import_yaml.isAlias)(node) ? node.resolve(wf.doc) : node;
+var scalarValueOf = (wf, node) => {
+  const resolved = deref(wf, node);
+  return (0, import_yaml.isScalar)(resolved) ? resolved.value : void 0;
+};
 var topLevelMap = (wf) => (0, import_yaml.isMap)(wf.doc.contents) ? wf.doc.contents : null;
 var findPair = (map, key) => map.items.find((pair) => (0, import_yaml.isScalar)(pair.key) && pair.key.value === key);
 var jobEntries = (wf) => {
@@ -7392,12 +7397,13 @@ var jobEntries = (wf) => {
   if (!(0, import_yaml.isMap)(jobsNode)) return [];
   const entries = [];
   for (const pair of jobsNode.items) {
-    if (!(0, import_yaml.isScalar)(pair.key) || !(0, import_yaml.isMap)(pair.value)) continue;
+    const jobNode = deref(wf, pair.value);
+    if (!(0, import_yaml.isScalar)(pair.key) || !(0, import_yaml.isMap)(jobNode)) continue;
     entries.push({
       key: String(pair.key.value),
       keyLine: wf.lineOfNode(pair.key),
-      map: pair.value,
-      callsReusableWorkflow: pair.value.has("uses")
+      map: jobNode,
+      callsReusableWorkflow: jobNode.has("uses")
     });
   }
   return entries;
@@ -7405,7 +7411,7 @@ var jobEntries = (wf) => {
 var triggerNames = (wf) => {
   const top = topLevelMap(wf);
   if (!top) return [];
-  const onNode = findPair(top, "on")?.value;
+  const onNode = deref(wf, findPair(top, "on")?.value);
   if ((0, import_yaml.isScalar)(onNode)) return [String(onNode.value)];
   if ((0, import_yaml.isSeq)(onNode)) {
     return onNode.items.filter(import_yaml.isScalar).map((item) => String(item.value));
@@ -7418,7 +7424,7 @@ var triggerNames = (wf) => {
 var triggerMap = (wf) => {
   const top = topLevelMap(wf);
   if (!top) return null;
-  const onNode = findPair(top, "on")?.value;
+  const onNode = deref(wf, findPair(top, "on")?.value);
   return (0, import_yaml.isMap)(onNode) ? onNode : null;
 };
 
@@ -7426,7 +7432,7 @@ var triggerMap = (wf) => {
 var maxJobTimeout = (wf, options2) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
-    const timeoutNode = job.map.get("timeout-minutes", true);
+    const timeoutNode = deref(wf, job.map.get("timeout-minutes", true));
     if (!(0, import_yaml2.isScalar)(timeoutNode) || typeof timeoutNode.value !== "number") continue;
     if (timeoutNode.value <= options2.maxTimeoutMinutes) continue;
     findings2.push({
@@ -7457,9 +7463,9 @@ var pullRequestRequiresConcurrency = (wf) => {
       }
     ];
   }
-  const concurrencyNode = concurrencyPair.value;
+  const concurrencyNode = deref(wf, concurrencyPair.value);
   if ((0, import_yaml3.isMap)(concurrencyNode)) {
-    const cancelInProgress = concurrencyNode.get("cancel-in-progress");
+    const cancelInProgress = scalarValueOf(wf, concurrencyNode.get("cancel-in-progress", true));
     const isExpression = typeof cancelInProgress === "string" && cancelInProgress.includes("${{");
     if (cancelInProgress === true || isExpression) return [];
   }
@@ -7520,11 +7526,12 @@ var import_yaml5 = __toESM(require_dist(), 1);
 var requireStepName = (wf) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
-    const stepsNode = job.map.get("steps");
+    const stepsNode = deref(wf, job.map.get("steps"));
     if (!(0, import_yaml5.isSeq)(stepsNode)) continue;
     for (const step of stepsNode.items) {
-      if (!(0, import_yaml5.isMap)(step)) continue;
-      const name = step.get("name");
+      const stepNode = deref(wf, step);
+      if (!(0, import_yaml5.isMap)(stepNode)) continue;
+      const name = scalarValueOf(wf, stepNode.get("name", true));
       if (typeof name === "string" && name !== "") continue;
       findings2.push({
         file: wf.file,
@@ -7569,7 +7576,7 @@ var workflowNameMatchesFilename = (wf) => {
       }
     ];
   }
-  const nameNode = namePair.value;
+  const nameNode = deref(wf, namePair.value);
   const name = (0, import_yaml6.isScalar)(nameNode) ? String(nameNode.value) : null;
   if (name === base) return [];
   return [

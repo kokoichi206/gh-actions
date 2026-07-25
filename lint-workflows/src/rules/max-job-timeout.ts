@@ -1,7 +1,7 @@
 import { isScalar } from "yaml";
 
 import type { Finding, LintOptions } from "../types.js";
-import { jobEntries, type WorkflowFile } from "../workflow-document.js";
+import { deref, jobEntries, type WorkflowFile } from "../workflow-document.js";
 
 /**
  * timeout-minutes はキーの存在だけでは課金の上限にならないため、値にも上限を課す。
@@ -10,7 +10,7 @@ import { jobEntries, type WorkflowFile } from "../workflow-document.js";
 export const maxJobTimeout = (wf: WorkflowFile, options: LintOptions): Finding[] => {
   const findings: Finding[] = [];
   for (const job of jobEntries(wf)) {
-    const timeoutNode = job.map.get("timeout-minutes", true);
+    const timeoutNode = deref(wf, job.map.get("timeout-minutes", true));
     if (!isScalar(timeoutNode) || typeof timeoutNode.value !== "number") continue;
     if (timeoutNode.value <= options.maxTimeoutMinutes) continue;
 

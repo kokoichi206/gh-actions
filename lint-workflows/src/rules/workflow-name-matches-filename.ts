@@ -1,7 +1,7 @@
 import { isScalar } from "yaml";
 
 import type { Finding } from "../types.js";
-import { findPair, topLevelMap, type WorkflowFile } from "../workflow-document.js";
+import { deref, findPair, topLevelMap, type WorkflowFile } from "../workflow-document.js";
 
 /**
  * Actions UI や gh run list の表示名から対象ファイルを一意に辿れるようにするため、
@@ -23,7 +23,7 @@ export const workflowNameMatchesFilename = (wf: WorkflowFile): Finding[] => {
     ];
   }
 
-  const nameNode = namePair.value;
+  const nameNode = deref(wf, namePair.value);
   const name = isScalar(nameNode) ? String(nameNode.value) : null;
   if (name === base) return [];
 

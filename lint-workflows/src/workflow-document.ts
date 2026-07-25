@@ -3,6 +3,7 @@ import {
   LineCounter,
   Pair,
   YAMLMap,
+  isAlias,
   isMap,
   isScalar,
   isSeq,
@@ -49,6 +50,20 @@ export const parseWorkflow = (file: string, source: string): WorkflowFile => {
   };
 };
 
+/**
+ * alias 参照 (*anchor) を実体ノードへ解決する。alias 以外はそのまま返す。
+ * 解決せずに isMap / isScalar 判定すると alias 経由の job / steps / 値を
+ * 黙って素通しする (検査の見逃しになる) ため、ノード種別を見る箇所では必ず通す。
+ */
+export const deref = (wf: WorkflowFile, node: unknown): unknown =>
+  isAlias(node) ? node.resolve(wf.doc) : node;
+
+/** scalar の実値を返す。scalar 以外 (map / seq / 欠落) は undefined。 */
+export const scalarValueOf = (wf: WorkflowFile, node: unknown): unknown => {
+  const resolved = deref(wf, node);
+  return isScalar(resolved) ? resolved.value : undefined;
+};
+
 export const topLevelMap = (wf: WorkflowFile): YAMLMap | null =>
   isMap(wf.doc.contents) ? wf.doc.contents : null;
 
@@ -64,12 +79,13 @@ export const jobEntries = (wf: WorkflowFile): JobEntry[] => {
 
   const entries: JobEntry[] = [];
   for (const pair of jobsNode.items) {
-    if (!isScalar(pair.key) || !isMap(pair.value)) continue;
+    const jobNode = deref(wf, pair.value);
+    if (!isScalar(pair.key) || !isMap(jobNode)) continue;
     entries.push({
       key: String(pair.key.value),
       keyLine: wf.lineOfNode(pair.key),
-      map: pair.value,
-      callsReusableWorkflow: pair.value.has("uses"),
+      map: jobNode,
+      callsReusableWorkflow: jobNode.has("uses"),
     });
   }
   return entries;
@@ -80,7 +96,7 @@ export const triggerNames = (wf: WorkflowFile): string[] => {
   const top = topLevelMap(wf);
   if (!top) return [];
 
-  const onNode = findPair(top, "on")?.value;
+  const onNode = deref(wf, findPair(top, "on")?.value);
   if (isScalar(onNode)) return [String(onNode.value)];
   if (isSeq(onNode)) {
     return onNode.items.filter(isScalar).map((item) => String(item.value));
@@ -98,6 +114,6 @@ export const triggerMap = (wf: WorkflowFile): YAMLMap | null => {
   const top = topLevelMap(wf);
   if (!top) return null;
 
-  const onNode = findPair(top, "on")?.value;
+  const onNode = deref(wf, findPair(top, "on")?.value);
   return isMap(onNode) ? onNode : null;
 };
