@@ -1,0 +1,16 @@
+name: lint-workflows
+description: >-
+  GitHub Actions workflow の運用・スタイル検査。
+  zizmor (security 専門) が扱わない規約を検査する:
+  job の timeout-minutes 必須と上限、トップレベル name とファイル名の一致、
+  step の name 必須、step 間の空行、schedule への workflow_dispatch 併記、
+  pull_request トリガーへの concurrency (cancel-in-progress)。
+
+inputs:
+  max-timeout-minutes:
+    description: job の timeout-minutes に許容する上限 (分)。デフォルト値は実装 (src/main.ts) を参照。
+    required: false
+
+runs:
+  using: node24
+  main: dist/index.cjs

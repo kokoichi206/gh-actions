@@ -1,0 +1,79 @@
+# ============================================================================
+# 消費側リポジトリ向けの reusable workflow。
+# GitHub Actions workflow の hygiene 検査 (zizmor + lint-workflows) を束ねる。
+#
+# 呼び出し例 (消費側の .github/workflows/ci-github-workflows.yml):
+#
+#     on:
+#       pull_request:
+#         paths:
+#           - ".github/workflows/**"
+#           - ".github/zizmor.yml"
+#
+#     jobs:
+#       workflow-ci:
+#         permissions:
+#           contents: read
+#           actions: read   # zizmor online-audits が GitHub API を叩くのに必要
+#         uses: kokoichi206/gh-actions/.github/workflows/workflow-ci.yml@main
+#
+# zizmor の設定は消費側リポジトリの .github/zizmor.yml が自動発見される
+# (存在しなければデフォルト設定で動く)。
+# ============================================================================
+name: workflow-ci
+
+on:
+  workflow_call:
+    inputs:
+      max-timeout-minutes:
+        description: "job の timeout-minutes に許容する上限 (分)。未指定時のデフォルトは lint-workflows action 側で決まる"
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  zizmor:
+    name: zizmor static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      # zizmor online-audit が GitHub API を叩く際に必要 (workflow / action 情報の取得)。
+      actions: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          inputs: .github/workflows/
+          # 依存先 action のメタデータを GitHub API で引いて分析する。
+          # private repo では rate limit を消費する点に注意。
+          online-audits: "true"
+          # SARIF (advanced-security) は GitHub Advanced Security 有償ライセンスが
+          # 必要なので使わず、finding を PR に inline annotation として出す
+          # (annotations と advanced-security は排他)。
+          advanced-security: "false"
+          annotations: "true"
+
+  workflow-lint:
+    name: workflow lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Lint workflows
+        uses: kokoichi206/gh-actions/lint-workflows@main
+        with:
+          max-timeout-minutes: ${{ inputs.max-timeout-minutes }}

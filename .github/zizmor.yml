@@ -1,0 +1,14 @@
+# zizmor (GitHub Actions 静的セキュリティ解析) 設定
+# https://docs.zizmor.sh/configuration/
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # 自リポジトリの action / reusable workflow は @main 追従で運用する
+        # (変更を全消費リポジトリへ即時伝播させるため。hash-pin にすると
+        #  消費側で SHA 更新が必要になり、共通化の目的が失われる)。
+        # サブパス付き参照 (kokoichi206/gh-actions/lint-workflows@main) は
+        # exact パターンにマッチしないため、repo 単位 + サブパスの両方を書く。
+        kokoichi206/gh-actions: ref-pin
+        kokoichi206/gh-actions/*: ref-pin
+        "*": hash-pin
