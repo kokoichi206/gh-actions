@@ -7360,7 +7360,7 @@ var require_dist = __commonJS({
 var import_node_fs = require("node:fs");
 var import_node_path = require("node:path");
 
-// src/rules/max-job-timeout.ts
+// src/rules/max-job-timeout/rule.ts
 var import_yaml2 = __toESM(require_dist(), 1);
 
 // src/workflow-document.ts
@@ -7428,7 +7428,7 @@ var triggerMap = (wf) => {
   return (0, import_yaml.isMap)(onNode) ? onNode : null;
 };
 
-// src/rules/max-job-timeout.ts
+// src/rules/max-job-timeout/rule.ts
 var maxJobTimeout = (wf, options2) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
@@ -7445,7 +7445,7 @@ var maxJobTimeout = (wf, options2) => {
   return findings2;
 };
 
-// src/rules/pull-request-requires-concurrency.ts
+// src/rules/pull-request-requires-concurrency/rule.ts
 var import_yaml3 = __toESM(require_dist(), 1);
 var pullRequestRequiresConcurrency = (wf) => {
   if (!triggerNames(wf).includes("pull_request")) return [];
@@ -7479,7 +7479,7 @@ var pullRequestRequiresConcurrency = (wf) => {
   ];
 };
 
-// src/rules/require-blank-line-between-steps.ts
+// src/rules/require-blank-line-between-steps/rule.ts
 var import_yaml4 = __toESM(require_dist(), 1);
 var requireBlankLineBetweenSteps = (wf) => {
   const findings2 = [];
@@ -7505,7 +7505,7 @@ var requireBlankLineBetweenSteps = (wf) => {
   return findings2;
 };
 
-// src/rules/require-job-timeout.ts
+// src/rules/require-job-timeout/rule.ts
 var requireJobTimeout = (wf) => {
   const findings2 = [];
   for (const job of jobEntries(wf)) {
@@ -7521,7 +7521,7 @@ var requireJobTimeout = (wf) => {
   return findings2;
 };
 
-// src/rules/require-step-name.ts
+// src/rules/require-step-name/rule.ts
 var import_yaml5 = __toESM(require_dist(), 1);
 var requireStepName = (wf) => {
   const findings2 = [];
@@ -7544,7 +7544,7 @@ var requireStepName = (wf) => {
   return findings2;
 };
 
-// src/rules/schedule-requires-workflow-dispatch.ts
+// src/rules/schedule-requires-workflow-dispatch/rule.ts
 var scheduleRequiresWorkflowDispatch = (wf) => {
   const on = triggerMap(wf);
   if (!on) return [];
@@ -7560,7 +7560,7 @@ var scheduleRequiresWorkflowDispatch = (wf) => {
   ];
 };
 
-// src/rules/workflow-name-matches-filename.ts
+// src/rules/workflow-name-matches-filename/rule.ts
 var import_yaml6 = __toESM(require_dist(), 1);
 var workflowNameMatchesFilename = (wf) => {
   const base = wf.file.replace(/^.*\//, "").replace(/\.ya?ml$/, "");

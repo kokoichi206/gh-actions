@@ -1,0 +1,8 @@
+[
+  {
+    "file": "missing-name.yml",
+    "line": 1,
+    "rule": "workflow-name-matches-filename",
+    "message": "トップレベル name がありません (name: missing-name を追加してください)"
+  }
+]

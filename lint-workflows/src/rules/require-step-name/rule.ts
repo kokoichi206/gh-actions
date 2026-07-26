@@ -1,7 +1,7 @@
 import { isMap, isSeq } from "yaml";
 
-import type { Finding } from "../types.js";
-import { deref, jobEntries, scalarValueOf, type WorkflowFile } from "../workflow-document.js";
+import type { Finding } from "../../types.js";
+import { deref, jobEntries, scalarValueOf, type WorkflowFile } from "../../workflow-document.js";
 
 /** 失敗時のログ・annotation で step を特定できるよう、全 step に空でない name を必須とする。 */
 export const requireStepName = (wf: WorkflowFile): Finding[] => {

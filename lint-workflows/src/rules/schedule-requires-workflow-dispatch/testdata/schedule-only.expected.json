@@ -1,0 +1,8 @@
+[
+  {
+    "file": "schedule-only.yml",
+    "line": 3,
+    "rule": "schedule-requires-workflow-dispatch",
+    "message": "schedule トリガーには workflow_dispatch を併記してください (手動実行での動作確認を可能にするため)"
+  }
+]

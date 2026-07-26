@@ -1,0 +1,8 @@
+name: at-limit
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Run
+        run: echo ok

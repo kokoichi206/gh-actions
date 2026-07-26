@@ -1,0 +1,8 @@
+[
+  {
+    "file": "block-scalar-boundaries.yml",
+    "line": 12,
+    "rule": "require-blank-line-between-steps",
+    "message": "step の間に空行がありません"
+  }
+]

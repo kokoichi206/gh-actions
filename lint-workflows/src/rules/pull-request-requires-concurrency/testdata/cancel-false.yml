@@ -1,0 +1,7 @@
+name: cancel-false
+on:
+  pull_request:
+concurrency:
+  group: g-${{ github.ref }}
+  cancel-in-progress: false
+jobs: {}

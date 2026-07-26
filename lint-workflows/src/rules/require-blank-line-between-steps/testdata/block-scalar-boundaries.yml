@@ -1,0 +1,20 @@
+name: block-scalar-boundaries
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One
+        run: |
+          echo first
+
+          echo after-internal-blank
+      - name: Two
+        run: echo two
+
+      - name: Three
+        run: |
+          echo body
+
+      - name: Four
+        run: echo four

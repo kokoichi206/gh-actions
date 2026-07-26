@@ -1,7 +1,7 @@
 import { isScalar } from "yaml";
 
-import type { Finding } from "../types.js";
-import { deref, findPair, topLevelMap, type WorkflowFile } from "../workflow-document.js";
+import type { Finding } from "../../types.js";
+import { deref, findPair, topLevelMap, type WorkflowFile } from "../../workflow-document.js";
 
 /**
  * Actions UI や gh run list の表示名から対象ファイルを一意に辿れるようにするため、

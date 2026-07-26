@@ -1,0 +1,8 @@
+[
+  {
+    "file": "comment-only-between.yml",
+    "line": 10,
+    "rule": "require-blank-line-between-steps",
+    "message": "step の間に空行がありません"
+  }
+]

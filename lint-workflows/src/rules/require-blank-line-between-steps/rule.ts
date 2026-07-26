@@ -1,7 +1,7 @@
 import { isSeq } from "yaml";
 
-import type { Finding } from "../types.js";
-import { jobEntries, type WorkflowFile } from "../workflow-document.js";
+import type { Finding } from "../../types.js";
+import { jobEntries, type WorkflowFile } from "../../workflow-document.js";
 
 type RangedNode = { range?: [number, number, number] | null };
 

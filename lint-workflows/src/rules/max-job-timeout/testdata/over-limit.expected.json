@@ -1,0 +1,8 @@
+[
+  {
+    "file": "over-limit.yml",
+    "line": 5,
+    "rule": "max-job-timeout",
+    "message": "job 'build' の timeout-minutes (90) が上限 60 を超えています (上限は action input max-timeout-minutes で調整可能)"
+  }
+]

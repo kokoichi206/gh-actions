@@ -1,0 +1,8 @@
+[
+  {
+    "file": "cancel-false.yml",
+    "line": 4,
+    "rule": "pull-request-requires-concurrency",
+    "message": "pull_request トリガーの workflow の concurrency には cancel-in-progress: true が必要です"
+  }
+]

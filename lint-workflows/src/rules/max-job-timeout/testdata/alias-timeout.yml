@@ -1,0 +1,14 @@
+name: alias-timeout
+jobs:
+  a:
+    runs-on: ubuntu-latest
+    timeout-minutes: &to 90
+    steps:
+      - name: One
+        run: echo 1
+  b:
+    runs-on: ubuntu-latest
+    timeout-minutes: *to
+    steps:
+      - name: One
+        run: echo 1

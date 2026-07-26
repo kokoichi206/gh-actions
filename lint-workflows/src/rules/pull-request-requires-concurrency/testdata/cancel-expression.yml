@@ -1,0 +1,7 @@
+name: cancel-expression
+on:
+  pull_request:
+concurrency:
+  group: g-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs: {}

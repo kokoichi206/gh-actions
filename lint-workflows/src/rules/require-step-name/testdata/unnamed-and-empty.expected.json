@@ -1,0 +1,14 @@
+[
+  {
+    "file": "unnamed-and-empty.yml",
+    "line": 7,
+    "rule": "require-step-name",
+    "message": "name の無い step があります (空文字も不可)"
+  },
+  {
+    "file": "unnamed-and-empty.yml",
+    "line": 9,
+    "rule": "require-step-name",
+    "message": "name の無い step があります (空文字も不可)"
+  }
+]

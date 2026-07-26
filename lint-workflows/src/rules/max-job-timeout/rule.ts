@@ -1,7 +1,7 @@
 import { isScalar } from "yaml";
 
-import type { Finding, LintOptions } from "../types.js";
-import { deref, jobEntries, type WorkflowFile } from "../workflow-document.js";
+import type { Finding, LintOptions } from "../../types.js";
+import { deref, jobEntries, type WorkflowFile } from "../../workflow-document.js";
 
 /**
  * timeout-minutes はキーの存在だけでは課金の上限にならないため、値にも上限を課す。

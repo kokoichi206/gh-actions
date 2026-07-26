@@ -1,0 +1,5 @@
+name: push-only
+on:
+  push:
+    branches: [main]
+jobs: {}

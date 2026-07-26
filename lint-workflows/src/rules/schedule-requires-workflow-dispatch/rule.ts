@@ -1,5 +1,5 @@
-import type { Finding } from "../types.js";
-import { findPair, triggerMap, type WorkflowFile } from "../workflow-document.js";
+import type { Finding } from "../../types.js";
+import { findPair, triggerMap, type WorkflowFile } from "../../workflow-document.js";
 
 /**
  * cron 専用 workflow は手動実行できず、動作確認が「次の cron を待つ」になるため、

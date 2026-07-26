@@ -1,6 +1,6 @@
 import { isMap } from "yaml";
 
-import type { Finding } from "../types.js";
+import type { Finding } from "../../types.js";
 import {
   deref,
   findPair,
@@ -8,7 +8,7 @@ import {
   topLevelMap,
   triggerNames,
   type WorkflowFile,
-} from "../workflow-document.js";
+} from "../../workflow-document.js";
 
 /**
  * PR へ push するたびに旧 run が回り続けると runner 課金が無駄になるため、

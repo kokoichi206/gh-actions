@@ -1,10 +1,10 @@
-import { maxJobTimeout } from "./rules/max-job-timeout.js";
-import { pullRequestRequiresConcurrency } from "./rules/pull-request-requires-concurrency.js";
-import { requireBlankLineBetweenSteps } from "./rules/require-blank-line-between-steps.js";
-import { requireJobTimeout } from "./rules/require-job-timeout.js";
-import { requireStepName } from "./rules/require-step-name.js";
-import { scheduleRequiresWorkflowDispatch } from "./rules/schedule-requires-workflow-dispatch.js";
-import { workflowNameMatchesFilename } from "./rules/workflow-name-matches-filename.js";
+import { maxJobTimeout } from "./rules/max-job-timeout/rule.js";
+import { pullRequestRequiresConcurrency } from "./rules/pull-request-requires-concurrency/rule.js";
+import { requireBlankLineBetweenSteps } from "./rules/require-blank-line-between-steps/rule.js";
+import { requireJobTimeout } from "./rules/require-job-timeout/rule.js";
+import { requireStepName } from "./rules/require-step-name/rule.js";
+import { scheduleRequiresWorkflowDispatch } from "./rules/schedule-requires-workflow-dispatch/rule.js";
+import { workflowNameMatchesFilename } from "./rules/workflow-name-matches-filename/rule.js";
 import type { Finding, LintOptions } from "./types.js";
 import { parseWorkflow } from "./workflow-document.js";
 
