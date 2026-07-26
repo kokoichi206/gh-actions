@@ -1,0 +1,8 @@
+[
+  {
+    "file": "broken-yaml.yml",
+    "line": 3,
+    "rule": "yaml-parse-error",
+    "message": "YAML の解析に失敗しました: Flow sequence in block collection must be sufficiently indented and end with a ] at line 3, column 1:"
+  }
+]
