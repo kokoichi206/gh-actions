@@ -1,0 +1,6 @@
+name: missing-cancel
+on:
+  pull_request:
+concurrency:
+  group: g-${{ github.ref }}
+jobs: {}

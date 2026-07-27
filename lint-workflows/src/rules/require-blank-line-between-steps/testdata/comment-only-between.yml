@@ -1,0 +1,11 @@
+name: comment-only-between
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One
+        run: echo one
+      # コメントだけでは区切りにならない
+      - name: Two
+        run: echo two

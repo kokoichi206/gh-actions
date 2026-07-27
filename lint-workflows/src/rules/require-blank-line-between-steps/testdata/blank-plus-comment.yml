@@ -1,0 +1,12 @@
+name: blank-plus-comment
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One
+        run: echo one
+
+      # 次の step の説明
+      - name: Two
+        run: echo two

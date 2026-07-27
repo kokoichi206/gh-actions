@@ -1,0 +1,8 @@
+[
+  {
+    "file": "leading-comment-mismatch.yml",
+    "line": 4,
+    "rule": "workflow-name-matches-filename",
+    "message": "name 'something-else' がファイル名 'leading-comment-mismatch' と一致しません"
+  }
+]

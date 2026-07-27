@@ -1,0 +1,8 @@
+[
+  {
+    "file": "missing-timeout.yml",
+    "line": 3,
+    "rule": "require-job-timeout",
+    "message": "job 'build' に timeout-minutes がありません"
+  }
+]

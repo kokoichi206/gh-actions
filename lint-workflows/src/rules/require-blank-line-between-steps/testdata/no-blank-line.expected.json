@@ -1,0 +1,8 @@
+[
+  {
+    "file": "no-blank-line.yml",
+    "line": 9,
+    "rule": "require-blank-line-between-steps",
+    "message": "step の間に空行がありません"
+  }
+]

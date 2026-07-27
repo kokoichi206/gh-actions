@@ -1,0 +1,93 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zizmor:
+    name: zizmor static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      # zizmor online-audit が GitHub API を叩く際に必要 (workflow / action 情報の取得)。
+      actions: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          inputs: .github/workflows/
+          online-audits: "true"
+          advanced-security: "false"
+          annotations: "true"
+
+  lint-workflows-package:
+    name: lint-workflows package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: lint-workflows
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          package_json_file: lint-workflows/package.json
+
+      - name: Get Node.js version
+        id: node-version
+        run: echo "version=$(jq -r '.devEngines.runtime.version' package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ steps.node-version.outputs.version }}
+          cache: "pnpm"
+          cache-dependency-path: lint-workflows/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
+
+      # dist は実行時 install を避けるためコミットする方式 (JS action の慣例)。
+      # src だけ直して dist の再ビルドを忘れる事故をここで検出する。
+      - name: Verify dist is up to date
+        run: git diff --exit-code -- dist
+
+      # PR の変更を含む dist を、実際の配布形態 (action.yml 経由の local action) で
+      # このリポジトリ自身の workflow に対して実行する。
+      # action.yml の構文・node24 runtime・main パスまで含めて検証される。
+      - name: Dogfood packaged action against this repository
+        uses: ./lint-workflows

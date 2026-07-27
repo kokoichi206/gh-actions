@@ -1,0 +1,7 @@
+name: missing-timeout
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run
+        run: echo ok

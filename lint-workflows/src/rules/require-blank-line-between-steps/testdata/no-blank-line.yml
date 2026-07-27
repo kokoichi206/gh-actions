@@ -1,0 +1,10 @@
+name: no-blank-line
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: One
+        run: echo one
+      - name: Two
+        run: echo two

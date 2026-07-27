@@ -1,0 +1,6 @@
+name: reusable-call-job
+jobs:
+  call:
+    uses: owner/repo/.github/workflows/x.yml@main
+    with:
+      foo: bar

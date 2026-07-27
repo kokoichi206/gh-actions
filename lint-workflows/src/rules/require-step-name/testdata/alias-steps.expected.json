@@ -1,0 +1,14 @@
+[
+  {
+    "file": "alias-steps.yml",
+    "line": 10,
+    "rule": "require-step-name",
+    "message": "name の無い step があります (空文字も不可)"
+  },
+  {
+    "file": "alias-steps.yml",
+    "line": 10,
+    "rule": "require-step-name",
+    "message": "name の無い step があります (空文字も不可)"
+  }
+]

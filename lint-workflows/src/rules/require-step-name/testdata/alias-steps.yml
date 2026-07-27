@@ -1,0 +1,14 @@
+name: alias-steps
+jobs:
+  a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps: &shared
+      - name: One
+        run: echo 1
+
+      - run: echo unnamed
+  b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps: *shared

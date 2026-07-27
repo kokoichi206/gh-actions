@@ -1,0 +1,3 @@
+name: scalar-trigger
+on: pull_request
+jobs: {}

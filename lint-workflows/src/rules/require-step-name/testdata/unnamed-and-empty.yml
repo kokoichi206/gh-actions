@@ -1,0 +1,10 @@
+name: unnamed-and-empty
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: echo no-name
+
+      - name: ""
+        run: echo empty-name

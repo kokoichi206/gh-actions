@@ -1,0 +1,8 @@
+[
+  {
+    "file": "seq-trigger.yml",
+    "line": 2,
+    "rule": "pull-request-requires-concurrency",
+    "message": "pull_request トリガーには concurrency (cancel-in-progress: true) を設定してください"
+  }
+]
