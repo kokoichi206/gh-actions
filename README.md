@@ -52,9 +52,6 @@ node <path-to-this-repo>/lint-workflows/dist/index.cjs
 zizmor + lint-workflows を束ねた workflow hygiene 検査。
 呼び出し例は [.github/workflows/workflow-ci.yml](.github/workflows/workflow-ci.yml) のヘッダコメントを参照。
 
-zizmor 本体は、GitHub Actions の `actions.lock` と `$/` 参照に対応した 1.32.0 を使う。
-zizmor-action と本体バージョンを更新するときは、この reusable workflow とリポジトリ自身の CI を揃える。
-
 ```yaml
 jobs:
   workflow-ci:
