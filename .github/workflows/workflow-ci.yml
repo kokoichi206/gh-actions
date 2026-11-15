@@ -48,15 +48,15 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
         with:
+          # actions.lock と $/ 参照に対応した検査器を使う。
+          version: "1.32.0"
           inputs: .github/workflows/
           # 依存先 action のメタデータを GitHub API で引いて分析する。
           # private repo では rate limit を消費する点に注意。
           online-audits: "true"
-          # SARIF (advanced-security) は GitHub Advanced Security 有償ライセンスが
-          # 必要なので使わず、finding を PR に inline annotation として出す
-          # (annotations と advanced-security は排他)。
+          # PR の inline annotation を使うため、排他の SARIF upload は無効にする。
           advanced-security: "false"
           annotations: "true"
 
