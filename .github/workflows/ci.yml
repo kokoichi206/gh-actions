@@ -2,7 +2,8 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
@@ -30,8 +31,9 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
         with:
+          version: "1.32.0"
           inputs: .github/workflows/
           online-audits: "true"
           advanced-security: "false"
@@ -86,8 +88,8 @@ jobs:
       - name: Verify dist is up to date
         run: git diff --exit-code -- dist
 
-      # PR の変更を含む dist を、実際の配布形態 (action.yml 経由の local action) で
+      # PR の変更を含む dist を、実際の配布形態 (action.yml 経由の同一リポジトリ参照) で
       # このリポジトリ自身の workflow に対して実行する。
       # action.yml の構文・node24 runtime・main パスまで含めて検証される。
       - name: Dogfood packaged action against this repository
-        uses: ./lint-workflows
+        uses: $/lint-workflows
